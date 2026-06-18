@@ -116,6 +116,7 @@ internal class BlinkyService : LifecycleService() {
             if (connectionManager == null) {
                 // Plant a new Tree that logs to nRF Logger.
                 val tree = nRFLoggerTree(this, null, identifier, name)
+                    .apply { setLoggingTagsEnabled(false) }
                     .also { tree ->
                         Timber.plant(tree)
                         logSession.value = tree.session
