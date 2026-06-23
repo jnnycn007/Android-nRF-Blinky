@@ -46,7 +46,7 @@ dependencies {
     implementation(nordic.blek.environment.android.compose)
 
     // Common logging facade.
-    implementation(nordic.kotlin.log)
+    implementation(nordic.kotlin.log.timber)
 
     // AndroidX dependencies required by the :app module.
     implementation(libs.androidx.activity.compose)

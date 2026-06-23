@@ -11,6 +11,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import no.nordicsemi.kotlin.ble.client.android.CentralManager
 import no.nordicsemi.kotlin.ble.core.android.AndroidEnvironment
+import no.nordicsemi.kotlin.log.Log
+import no.nordicsemi.kotlin.log.timber.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -95,6 +97,9 @@ internal class BluetoothLifecycleManager @Inject constructor(
             _environment = env
             _scope = scp
             _centralManager = centralManagerBuilder.create(env, scp)
+                .apply {
+                    logger = Log.Sink.Timber { _, _-> true}
+                }
         }
     }
 
