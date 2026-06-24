@@ -3,7 +3,6 @@ package no.nordicsemi.android.blinky.ui.control.service
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -118,9 +117,6 @@ internal class BlinkyConnectionManager(
                         }
                     }
                     .launchIn(this)
-
-                // Await scope cancellation.
-                awaitCancellation()
             }
         } catch (_: BlinkyException.Timeout) {
             Timber.w("Connection timed out")
