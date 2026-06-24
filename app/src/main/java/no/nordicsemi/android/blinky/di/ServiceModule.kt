@@ -17,16 +17,17 @@ import no.nordicsemi.kotlin.ble.client.android.CentralManager
 
 @Module
 @InstallIn(ServiceComponent::class)
-internal abstract class BlinkyModule {
+internal abstract class ServiceModule {
 
+    @ServiceScoped
     internal class BlinkyFactoryImpl @Inject constructor(
-        private val centralManager: CentralManager,
+        private val bluetoothLifecycleOwner: BluetoothLifecycleOwner,
         service: Service,
-        manager: BluetoothLifecycleManager,
     ): BlinkyFactory {
+        private var centralManager: CentralManager? = null
 
-        // This initiator registers a Service lifecycle observer to notify the BluetoothLifecycleManager
-        // when the Service is created and destroyed.
+        // This initiator registers a Service lifecycle observer to acquire the Bluetooth Lifecycle
+        // Owner when the Service is created and release it when and destroyed.
         //
         // This is possible, because the service is injecting the BlinkyFactory. Otherwise, the
         // manager should be informed manually in onCreate and onDestroy methods.
@@ -37,14 +38,20 @@ internal abstract class BlinkyModule {
                     source: LifecycleOwner,
                     event: Lifecycle.Event
                 ) = when (event) {
-                    Lifecycle.Event.ON_CREATE -> manager.onComponentCreated()
-                    Lifecycle.Event.ON_DESTROY -> manager.onComponentDestroyed()
+                    Lifecycle.Event.ON_CREATE -> {
+                        centralManager = bluetoothLifecycleOwner.acquire().centralManager
+                    }
+                    Lifecycle.Event.ON_DESTROY -> {
+                        centralManager = null
+                        bluetoothLifecycleOwner.release()
+                    }
                     else -> {}
                 }
             })
         }
 
         override fun create(identifier: String): Blinky {
+            val centralManager = requireNotNull(centralManager) { "Central manager not initialized" }
             val peripheral = centralManager.getPeripheralById(identifier)!!
             return BlinkyManager(centralManager, peripheral)
         }
