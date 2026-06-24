@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -73,15 +76,26 @@ private fun App(identifier: String?, name: String?) {
         ),
         entryProvider = entryProvider {
             scannerEntry(
-                onDeviceSelected = { identifier, name ->
+                onDeviceSelected = dropUnlessResumed { identifier, name ->
                     backStack.add(BlinkyKey(BlinkyDevice(identifier, name)))
                 }
             )
             blinkyEntry(
-                onNavigateUp = {
-                    backStack.removeLastOrNull()
-                }
+                onNavigateUp = dropUnlessResumed { backStack.removeLastOrNull() }
             )
         }
     )
+}
+
+/**
+ * A version of [dropUnlessResumed] that accepts two parameters.
+ */
+@Composable
+private fun <P1, P2> dropUnlessResumed(block: (P1, P2) -> Unit): (P1, P2) -> Unit {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    return { p1, p2 ->
+        if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            block(p1, p2)
+        }
+    }
 }
