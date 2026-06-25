@@ -23,4 +23,5 @@
 # The rules are no longer needed since BLEK 2.0.0-alpha20:
 # https://github.com/nordicsemi/Kotlin-BLE-Library/pull/296
 -dontwarn no.nordicsemi.kotlin.ble.environment.android.NativeAndroidEnvironment
+-dontwarn no.nordicsemi.kotlin.ble.environment.android.NativeAndroidEnvironment$Companion
 -dontwarn no.nordicsemi.kotlin.ble.environment.android.mock.MockAndroidEnvironment
