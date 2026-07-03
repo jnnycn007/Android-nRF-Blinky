@@ -1,10 +1,8 @@
 package no.nordicsemi.android.blinky.spec
 
 import kotlin.time.Duration.Companion.seconds
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class BlinkySpec {
 
     companion object {

@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalUuidApi::class)
-
 package no.nordicsemi.android.blinky.di
 
 import dagger.Module
