@@ -10,7 +10,6 @@ import no.nordicsemi.android.common.scanner.data.OnlyWithNames
 import no.nordicsemi.android.common.scanner.data.WithServiceUuid
 import no.nordicsemi.android.common.scanner.rememberFilterState
 import no.nordicsemi.android.scanner.R
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 /**
@@ -19,7 +18,6 @@ import kotlin.uuid.Uuid
  * @param onDeviceSelected The callback that is called when a device is selected.
  * The parameters are the device identifier (MAC) and the device name (if available).
  */
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 internal fun BlinkyScanner(
     onDeviceSelected: (String, String?) -> Unit,

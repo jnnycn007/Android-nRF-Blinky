@@ -24,14 +24,12 @@ import no.nordicsemi.kotlin.ble.client.exception.InvalidAttributeException
 import no.nordicsemi.kotlin.ble.client.exception.OperationFailedException
 import no.nordicsemi.kotlin.ble.core.exception.BluetoothException
 import timber.log.Timber
-import kotlin.uuid.ExperimentalUuidApi
 
 /**
  * Implementation of the [Blinky.State] interface for the LED Button Service (LBS).
  *
  * @param onReady A callback called when the profile is initialized.
  */
-@OptIn(ExperimentalUuidApi::class)
 internal class LedButtonProfileImpl(
     private val onReady: suspend CoroutineScope.(Blinky.State) -> Unit,
 ): Profile.Simple(

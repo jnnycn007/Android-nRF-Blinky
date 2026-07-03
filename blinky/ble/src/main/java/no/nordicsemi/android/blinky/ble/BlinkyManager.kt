@@ -11,7 +11,6 @@ import no.nordicsemi.kotlin.ble.client.android.CentralManager
 import no.nordicsemi.kotlin.ble.client.android.Peripheral
 import no.nordicsemi.kotlin.ble.client.exception.InvalidAttributeException
 import no.nordicsemi.kotlin.ble.core.ConnectionState.Disconnected.Reason
-import kotlin.uuid.ExperimentalUuidApi
 
 /**
  * A Bluetooth LE implementation of the [Blinky] interface.
@@ -23,7 +22,6 @@ import kotlin.uuid.ExperimentalUuidApi
  * @param centralManager The central manager to use to connect to the peripheral.
  * @param peripheral The peripheral.
  */
-@OptIn(ExperimentalUuidApi::class)
 class BlinkyManager(
     private val centralManager: CentralManager,
     private val peripheral: Peripheral,
