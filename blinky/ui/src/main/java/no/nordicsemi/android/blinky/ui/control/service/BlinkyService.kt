@@ -107,10 +107,11 @@ internal class BlinkyService : LifecycleService() {
         if (identifier != null) {
             // In the Mock flavor, the actual BLUETOOTH_CONNECT permission may not be granted.
             // In that case, start the service in background.
-            if (checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                startForeground(NOTIFICATION_ID, createNotification(identifier, name, state.value))
-            } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 updateNotification(identifier, name, state.value)
+            } else {
+                startForeground(NOTIFICATION_ID, createNotification(identifier, name, state.value))
             }
 
             if (connectionManager == null) {
@@ -310,9 +311,18 @@ internal class BlinkyService : LifecycleService() {
                     putExtra(EXTRA_NAME, device.name)
                 }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-                context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                context.startForegroundService(intent)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // The check for BLUETOOTH_CONNECT permission is to handle the case when the
+                // app is running in mock flavor. In that case, the native BLUETOOTH_CONNECT
+                // permissions may not be granted, and starting the service with
+                // ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE type would crash the app.
+                // On native environment the permission should be granted by now by the scanner.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                    context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    context.startService(intent)
+                } else {
+                    context.startForegroundService(intent)
+                }
             } else {
                 context.startService(intent)
             }

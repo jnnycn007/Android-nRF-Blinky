@@ -137,7 +137,6 @@ internal class BlinkyViewModel @AssistedInject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         // Unbind, but keep the Service running.
         // The Service will be stopped by the BackHandler if the user navigates back to
         // the Scanner screen (see BlinkyScreen).
